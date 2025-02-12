@@ -1,10 +1,10 @@
-
 # STREMLIT UYGULAMASI
 
 import streamlit as st
 import whisper
 import os
 import ffmpeg
+import json
 from tempfile import NamedTemporaryFile
 
 def convert_to_wav(input_file):
@@ -13,15 +13,15 @@ def convert_to_wav(input_file):
     try:
         ffmpeg.input(input_file).output(output_file, format="wav").run()
         return output_file
-    except Exception as e:  # Buradaki hatayı ffmpeg.Error değil, genel Exception olarak değiştir
+    except Exception as e:
         print(f"FFmpeg Error: {e}")
         return None
 
 def transcribe_audio(audio_file):
     """ Whisper modelini kullanarak ses dosyasını metne çevirir. """
     model = whisper.load_model("large")
-    result = model.transcribe(audio_file)
-    return result["text"]
+    result = model.transcribe(audio_file, word_timestamps=True)  # Kelime zaman damgalarıyla çeviri yap
+    return result
 
 # Streamlit arayüzü
 st.set_page_config(page_title="Whisper Ses Transkripsiyon", layout="centered")
@@ -44,13 +44,27 @@ if uploaded_file is not None:
     
     if wav_filename:
         st.write("🔄 Ses dosyanız işleniyor, lütfen bekleyin...")
-        transcribed_text = transcribe_audio(wav_filename)
+        transcription_result = transcribe_audio(wav_filename)
         os.remove(wav_filename)  # Geçici dosyayı temizle
         
+        # Düz metin çıktısı
+        transcribed_text = transcription_result["text"]
+        
+        # Zaman damgalı JSON formatı
+        word_timestamps = [
+            {"word": word["word"], "start": word["start"], "end": word["end"]}
+            for word in transcription_result["segments"]
+        ]
+        
+        json_output = json.dumps(word_timestamps, indent=4, ensure_ascii=False)
+
         st.subheader("📝 Transkripsiyon Sonucu")
         st.text_area("Çıktı:", transcribed_text, height=250)
         
-        st.download_button("📥 Metni İndir", transcribed_text, file_name="transcription.txt", mime="text/plain")
+        # 📥 Düz Metin Olarak İndir
+        st.download_button("📥 Düz Metni İndir", transcribed_text, file_name="transcription.txt", mime="text/plain")
+
+        # 📥 Zaman Damgalı JSON Olarak İndir
+        st.download_button("📥 Zaman Damgalı JSON İndir", json_output, file_name="transcription.json", mime="application/json")
     
     os.remove(temp_filename)  # Orijinal dosyayı temizle
-
