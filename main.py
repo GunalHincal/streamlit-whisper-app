@@ -12,7 +12,6 @@ def convert_to_wav(input_file):
     """ Ses dosyasını WAV formatına çevirir. """
     output_file = "converted_audio.wav"
     try:
-        try:
         ffmpeg.input(input_file).output(output_file, format="wav").run()
         return output_file
     except Exception as e:  # Buradaki hatayı ffmpeg.Error değil, genel Exception olarak değiştir
