@@ -1,6 +1,5 @@
 
-#STREMLIT UYGULAMASI
-
+# STREMLIT UYGULAMASI
 
 import streamlit as st
 import whisper
@@ -54,3 +53,4 @@ if uploaded_file is not None:
         st.download_button("📥 Metni İndir", transcribed_text, file_name="transcription.txt", mime="text/plain")
     
     os.remove(temp_filename)  # Orijinal dosyayı temizle
+
