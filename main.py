@@ -12,10 +12,15 @@ def convert_to_wav(input_file):
     """ Ses dosyasını WAV formatına çevirir. """
     output_file = "converted_audio.wav"
     try:
-        ffmpeg.input(input_file).output(output_file, format="wav").run(overwrite_output=True)
+        (
+            ffmpeg
+            .input(input_file)
+            .output(output_file, format="wav")
+            .run(overwrite_output=True)
+        )
         return output_file
-    except Exception as e:
-        st.error(f"Ses dönüştürme hatası: {e}")
+    except ffmpeg.Error as e:
+        print("FFmpeg error:", e)
         return None
 
 def transcribe_audio(audio_file):
