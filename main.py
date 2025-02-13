@@ -83,6 +83,7 @@ st.write(f"**Parametre Sayısı:** {model_info['parameters']}")
 st.write(f"**Gerekli VRAM:** {model_info['VRAM']}")
 st.write(f"**Hız:** {model_info['speed']}")
 st.write(f"**Doğruluk:** {model_info['accuracy']}")
+st.write(f"**Dil Desteği:** {model_info['languages']}")  # 🌍 Dil desteğini ekledik!
 st.write(f"**Açıklama:** {model_info['description']}")
 
 # 📥 Ses Dosyası Yükleme
