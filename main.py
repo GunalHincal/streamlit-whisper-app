@@ -1,4 +1,4 @@
-# STREAMLIT UYGULAMASI  
+# STREAMLIT UYGULAMASI    
 
 import streamlit as st
 import whisper
