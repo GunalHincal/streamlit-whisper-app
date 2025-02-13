@@ -246,7 +246,7 @@ Arayüz **http://localhost:8501** adresinde çalışacaktır.
     
 4.  **Branch'i push edin:**
   
-    bash
+    bash  
     
     `git push origin feature/your-feature` 
     
